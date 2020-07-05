@@ -65,6 +65,26 @@ app.get('/todos/:id', (req, res) => {
   }).catch(e => res.status(400).send(`Unable to perform query\n ${e}`))
 })
 
+app.delete('/todos/:id', (req, res) => {
+  let id = req.params.id
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send({
+      error: `${id} not a valid id`
+    })
+  }
+  Todo.findOneAndRemove({
+    _id: id
+  }).then(todo => {
+    if (!todo) {
+      return res.status(400).send({
+        error: `${id} not found`
+      })
+    }
+    res.status(200).send(todo)
+  }).catch(e => res.status(404).send(e))
+})
+
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`)
 })
