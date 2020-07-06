@@ -1,13 +1,22 @@
+require('./config/config.js')
 const _ = require('lodash')
 const express = require('express')
 const bodyParser = require('body-parser')
-const { ObjectID } = require('mongodb')
+const {
+  ObjectID
+} = require('mongodb')
 
-const { mongoose } = require('./db/mongoose.js')
-const { Todo } = require('./models/todo.js')
-const { User } = require('./models/users.js')
+const {
+  mongoose
+} = require('./db/mongoose.js')
+const {
+  Todo
+} = require('./models/todo.js')
+const {
+  User
+} = require('./models/users.js')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 const todos = '/todos'
 const app = express()
@@ -70,8 +79,8 @@ app.delete('/todos/:id', (req, res) => {
     })
   }
   Todo.findOneAndRemove({
-    _id: id,
-  })
+      _id: id,
+    })
     .then((todo) => {
       if (!todo) {
         return res.status(400).send({
@@ -101,12 +110,18 @@ app.patch('/todos/:id', (req, res) => {
     body.completedAt = null
   }
 
-  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+  Todo.findByIdAndUpdate(id, {
+      $set: body
+    }, {
+      new: true
+    })
     .then((todo) => {
       if (!todo) {
         return res.status(404).send()
       }
-      res.send({ todo })
+      res.send({
+        todo
+      })
     })
     .catch((e) => res.status(400).send(err))
 })
