@@ -110,5 +110,34 @@ describe('GET /todos/:id', () => {
       .end(done)
   })
 
+  describe('DELETE /todos/:id', () => {
+    let id = todos[0]._id.toHexString()
+    it('should delete a todo doc', (done) => {
+      request(app)
+        .delete(`/todos/${id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.todo._id).toBe(id)
+        })
+        .end(done)
+    })
+
+    it('should return 400 if todo not found', (done) => {
+      notFoundId = String.fromCharCode(id.charCodeAt(0) + 1) + id.slice(1)
+      request(app)
+        .delete(`/todos/${notFoundId}`)
+        .expect(400)
+        .end(done)
+    })
+
+    it('should return 404 if not valid todo id', (done) => {
+      request(app)
+        .delete(`/todos/123`)
+        .expect(404)
+        .end(done)
+    })
+  })
+
+  
 
 })
